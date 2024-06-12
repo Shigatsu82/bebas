@@ -37,6 +37,11 @@ class BarangKeluarController extends Controller
             'product_id' => 'required',
         ]);
 
+        $currentStock = Product::find($request->product_id);
+        if($request->qty > $currentStock->stock){
+            return back()->with('error', 'Kuantitas melebihi stok yang tersedia');
+        }
+
         BarangKeluar::create($request->all());
         return redirect()->route('outproducts.index')->with('success', 'Barang Keluar record created successfully.');
     }
@@ -55,9 +60,8 @@ class BarangKeluarController extends Controller
      */
     public function edit(string $id)
     {
-        $productOption = Product::all();
         $barangKeluar = BarangKeluar::find($id);
-        return view('outproducts.edit', compact('barangKeluar', 'productOption'));
+        return view('outproducts.edit', compact('barangKeluar'));
     }
 
     /**
@@ -70,9 +74,14 @@ class BarangKeluarController extends Controller
             'qty',
             'product_id',
         ]);
-        $barangKeluar = BarangKeluar::find($id);
-        $barangKeluar->update($request->all());
-        return redirect()->route('outproducts.index')->with('success', 'Barang Keluar record updated successfully.');
+        $currentStock = Product::find($request->product_id);
+        if($request->qty > $currentStock->stock){
+            return back()->with('error', 'Kuantitas melebihi stok yang tersedia');
+        }else{
+            $barangKeluar = BarangKeluar::find($id);
+            $barangKeluar->update($request->all());
+            return redirect()->route('outproducts.index')->with('success', 'Barang Keluar record updated successfully.');
+        }
     }
 
     /**

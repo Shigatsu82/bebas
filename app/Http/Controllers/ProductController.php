@@ -13,6 +13,7 @@ use Illuminate\View\View;
 
 //import Http Request
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 
@@ -23,14 +24,29 @@ class ProductController extends Controller
      *
      * @return void
      */
-    public function index() : View
-    {
-        //get all products
-        $products = Product::latest()->paginate(10);
+    public function index(Request $request) : View
+    { 
+        $searchTerm = $request->search;
+        $productQuery = Product::query()
+        ->select('products.id', 'products.title', 'products.image', 'products.stock', 'products.price', 'products.description', 'categories.category')
+        ->join('categories', 'products.category_id', '=', 'categories.id');
 
-        //render view with products
+        if($searchTerm){
+            $productQuery->where(function($query) use ($searchTerm){
+                $query->where('products.id', 'like', '%' . $searchTerm . '%')
+                ->orWhere('products.title', 'like', '%' . $searchTerm . '%')
+                ->orWhere('products.description', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        $products = $productQuery->paginate(10);
+
+        $products->getCollection()->transform(function ($product){
+            $categoryInfo = DB::select('SELECT infoKategori(?) as infoCategory', [$product->category])[0]->infoCategory;
+            $product->category = $categoryInfo;
+            return $product;
+        });
         return view('products.index', compact('products'));
-
     }
 
     /**

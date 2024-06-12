@@ -1,5 +1,19 @@
 @extends('layouts.master')
 @section('h1-title', 'Product')
+@section('search')
+    <form action="/products" method="GET" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+    @csrf
+    <div class="input-group">
+        <input type="text" name="search" class="form-control bg-light border-0 small" placeholder="Search for..."
+            aria-label="Search" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">
+                <i class="fas fa-search fa-sm"></i>
+            </button>
+        </div>
+    </div>
+    </form>
+@endsection
 @section('content')
 <body style="background: lightgray">
     <div class="container mt-5">
@@ -15,6 +29,7 @@
                                     <th scope="col">TITLE</th>
                                     <th scope="col">PRICE</th>
                                     <th scope="col">STOCK</th>
+                                    <th scope="col">CATEGORY</th>
                                     <th scope="col" style="width: 20%">ACTIONS</th>
                                 </tr>
                             </thead>
@@ -27,6 +42,7 @@
                                         <td>{{ $product->title }}</td>
                                         <td>{{ "Rp " . number_format($product->price,2,',','.') }}</td>
                                         <td>{{ $product->stock }}</td>
+                                        <td>{{ $product->category }}</td>
                                         <td class="text-center">
                                             <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="{{ route('products.destroy', $product->id) }}" method="POST">
                                                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-dark"><i class="fa fa-eye"></i></a>
@@ -44,7 +60,7 @@
                                 @endforelse
                             </tbody>
                         </table>
-                        {{ $products->links() }}
+                        
                     </div>
                 </div>
             </div>

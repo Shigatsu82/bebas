@@ -10,12 +10,11 @@ class CategoryController extends Controller
 {
     public function index(Request $request){
         if($request->search){
-            $data = DB::table('categories')->select('id', 'category', 'description')
-            ->where('category', 'like', '%'.$request->search.'%')
-            ->orWhere('description', 'like', '%'.$request->search.'%')
+            $data = DB::table('categories')->select('id', 'description', DB::raw('infoKategori(category) as kat'))
+            ->where('description', 'like', '%'.$request->search.'%')
             ->orWhere('id', 'like', '%'.$request->search.'%')->paginate(10);
         }else{
-            $data = Category::latest()->paginate(10);
+            $data = DB::table('categories')->select('id', 'description', DB::raw('infoKategori(category) as kat'))->paginate(10);
             return view('kategori.index', compact('data'));
         }
         return view('kategori.index', compact('data'));

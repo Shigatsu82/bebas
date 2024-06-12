@@ -12,16 +12,14 @@
     </div>
 
     <div class="form-group">
-        <label for="tgl_masuk">Tanggal Masuk:</label>
-        <input type="date" name="tgl_masuk" id="tgl_masuk" value="{{ old('tgl_masuk', $barangKeluar->tgl_keluar) }}" class="form-control">
+        <label for="tgl_masuk">Tanggal Keluar:</label>
+        <input type="date" name="tgl_keluar" id="tgl_keluar" value="{{ old('tgl_keluar', $barangKeluar->tgl_keluar) }}" class="form-control">
     </div>
 
     <div class="form-group">
         <label for="product_id">Product:</label>
         <select name="product_id" id="product_id" class="form-control" disabled>
-            @foreach($productOption as $product)
-                <option value="{{ old('product_id', $barangKeluar->id)}}">{{$product->title}}</option>
-            @endforeach
+                <option value="{{ old('product_id', $barangKeluar->id)}}">{{$barangKeluar->product->title}}</option>
         </select>
     </div>
 

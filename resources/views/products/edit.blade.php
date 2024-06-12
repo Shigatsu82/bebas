@@ -26,7 +26,7 @@
                                 <label class="font-weight-bold">TYPE</label>
                                 <select class="form-control @error('type') is-invalid @enderror" name="category_id">
                                     @foreach($categoryId as $category)
-                                        <option value="{{ $category->id }}" {{ old('type') == $category->id ? 'selected' : '' }}>{{ $category->category }}</option>
+                                        <option value="{{ $category->id }}" {{ old('type') == $category->id ? 'selected' : '' }}>{{ $category->description }}</option>
                                     @endforeach
                                 </select>
 

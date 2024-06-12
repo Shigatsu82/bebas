@@ -56,7 +56,7 @@
                                 <tr>
                                     <td>{{ $kategori->id }}</td>
                                     <td>{{ $kategori->description }}</td>
-                                    <td>{{ $kategori->category }}</td>
+                                    <td>{{ $kategori->kat }}</td>
                                     
                                     <td class="text-center"> 
                                         <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="{{ route('category.destroy', $kategori->id) }}" method="POST">

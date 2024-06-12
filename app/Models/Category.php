@@ -16,4 +16,7 @@ class Category extends Model
     public function getCategoryAttribute($value){
         return ucfirst($value);
     }
+    public function products(){
+        return $this->hasMany(Product::class);
+    }
 }
