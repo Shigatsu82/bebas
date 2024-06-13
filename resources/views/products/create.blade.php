@@ -42,7 +42,7 @@
                                 <select class="form-control" name="category_id" aria-label="Default select example">
                                     <option value="">--Pilih--</option>
                                     @foreach ($categoryId as $v)
-                                        <option value="{{$v->id}}">{{$v->category}}</option>
+                                        <option value="{{$v->id}}">{{$v->category}} - {{$v->description}}</option>
                                     @endforeach
                                 </select>
                                 @error('category_id')  
@@ -54,7 +54,7 @@
 
                             <div class="form-group mb-3">
                                 <label class="font-weight-bold">DESCRIPTION</label>
-                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="5" placeholder="Masukkan Description Product">{{ old('description') }}</textarea>
+                                <textarea id="description" class="form-control @error('description') is-invalid @enderror" name="description" rows="5" placeholder="Masukkan Description Product">{{ old('description') }}</textarea>
                             
                                 <!-- error message untuk description -->
                                 @error('description')
