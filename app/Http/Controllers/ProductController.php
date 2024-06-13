@@ -12,6 +12,7 @@ use App\Models\Product;
 use Illuminate\View\View;
 
 //import Http Request
+use App\Models\BarangMasuk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
@@ -40,7 +41,7 @@ class ProductController extends Controller
             });
         }
 
-        $products = $productQuery->paginate(10);
+        $products = $productQuery->paginate(3);
 
         $products->getCollection()->transform(function ($product){
             $categoryInfo = DB::select('SELECT infoKategori(?) as infoCategory', [$product->category])[0]->infoCategory;
@@ -71,25 +72,33 @@ class ProductController extends Controller
     {
         //validate form
         $request->validate([
-            'image'         => 'required|image|mimes:jpeg,jpg,png|max:2048',
+            'image'         => 'required|image|mimes:jpeg,jpg,png|max:4096',
             'title'         => 'required|min:5',
             'category_id'   => 'required',
             'description'   => 'required|min:1',
-            'price'         => 'required|numeric',
+            'price'         => 'numeric',
             'stock'         => 'required|numeric'
         ]);
         //upload image
         $image = $request->file('image');
         $image->storeAs('public/products/', $image->hashName());
         //create product
-        Product::create([
+        $barangInput = Product::create([
             'image'         => $image->hashName(),
             'title'         => $request->title,
             'description'   => $request->description,
             'price'         => $request->price,
-            'stock'         => $request->stock,
+            'stock'         => 0,
             'category_id'   => $request->category_id, //change to 'category_id
         ]);
+
+        if($request->stock > 0){
+            BarangMasuk::create([
+                'tgl_masuk' => now(),
+                'qty' => $request->stock,
+                'product_id' => $barangInput->id,
+            ]);
+        }
 
         //redirect to index
         return redirect()->route('products.index')->with(['success' => 'Data Berhasil Disimpan!']);
