@@ -12,7 +12,8 @@ class CategoryController extends Controller
         if($request->search){
             $data = DB::table('categories')->select('id', 'description', DB::raw('infoKategori(category) as kat'))
             ->where('description', 'like', '%'.$request->search.'%')
-            ->orWhere('id', 'like', '%'.$request->search.'%')->paginate(10);
+            ->orWhere('id', 'like', '%'.$request->search.'%')
+            ->paginate(10);
         }else{
             $data = DB::table('categories')->select('id', 'description', DB::raw('infoKategori(category) as kat'))->paginate(10);
             return view('kategori.index', compact('data'));
