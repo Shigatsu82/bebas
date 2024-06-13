@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\BarangMasuk;
 use App\Models\BarangKeluar;
 use Illuminate\Http\Request;
 
@@ -31,10 +32,13 @@ class BarangKeluarController extends Controller
      */
     public function store(Request $request)
     {
+        $barangMasuk = BarangMasuk::where('product_id', $request->product_id)->latest()->first();
         $request->validate([
-            'tgl_keluar' => 'required',
-            'qty' => 'required',
-            'product_id' => 'required',
+            'tgl_keluar' => ['required', 'date', $barangMasuk ? 'after:' . $barangMasuk->tgl_masuk : $barangMasuk->tgl_masuk],
+            'qty' => ['required'],
+            'product_id' => ['required'],
+        ],[
+            'after' => 'Tanggal mu salah'
         ]);
 
         $currentStock = Product::find($request->product_id);
